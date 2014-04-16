@@ -62,7 +62,7 @@ public class BuildingGenerator implements DungeonGenerator {
             else{
                 for(int i = room.getX(); i < room.getX() + room.getWidth(); i++){
                     if(dungeon[i][room.getSplitY()+1].equals(Tile.FLOOR) &&
-                            dungeon[i][room.getSplitY()+1].equals(Tile.FLOOR) &&
+                            dungeon[i][room.getSplitY()-1].equals(Tile.FLOOR) &&
                             i != 0 && i != width-1){
                         points.add(new Point(i, room.getSplitY()));
                     }
@@ -255,7 +255,7 @@ public class BuildingGenerator implements DungeonGenerator {
     }
 
     public static void main(String[] args){
-        DungeonGenerator dg = new BuildingGenerator(80, 20, 10);
+        DungeonGenerator dg = new BuildingGenerator(70, 20, 10);
         dg.generate();
         System.out.println(dg);
     }
