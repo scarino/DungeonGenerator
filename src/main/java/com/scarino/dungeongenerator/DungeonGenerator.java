@@ -6,5 +6,7 @@ package com.scarino.dungeongenerator;
 public interface DungeonGenerator {
 
     Tile[][] generate();
+    int getWidth();
+    int getHeight();
 
 }
