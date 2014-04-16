@@ -17,7 +17,7 @@ public class CaveGenerator implements DungeonGenerator {
     private Tile[][] dungeon;
 
     public CaveGenerator(int width, int height, int seeds, int iterations) throws InvalidSizeException {
-        if((width * height) < seeds || (width * height) < (iterations + seeds)){
+        if((width * height) < (iterations + seeds) || width == 0 || height == 0){
             throw new InvalidSizeException("Dungeon is too small to generate.");
         }
 
@@ -38,7 +38,10 @@ public class CaveGenerator implements DungeonGenerator {
         List<Position> dungeonList = new ArrayList<Position>(iterations+seedCount);
         List<Position> potentialTiles = new ArrayList<Position>(iterations+seedCount);
 
-        potentialTiles.addAll(seeds);
+        for(Position pos : seeds){
+            dungeonList.add(pos);
+            potentialTiles.addAll(getNeighbours(pos));
+        }
 
         int count = 0;
         Random rand = new Random();
@@ -56,6 +59,16 @@ public class CaveGenerator implements DungeonGenerator {
         copyListToArray(dungeonList);
 
         return dungeon;
+    }
+
+    @Override
+    public int getWidth() {
+        return this.width;
+    }
+
+    @Override
+    public int getHeight() {
+        return this.height;
     }
 
     private boolean edgePos(Position pos){
@@ -92,6 +105,8 @@ public class CaveGenerator implements DungeonGenerator {
     private void addConnections (Position first, Position second, List<Position> dungeonList){
         int firstX = first.getX();
         int secondX = second.getX();
+        int firstY = first.getY();
+        int secondY = second.getY();
 
         while(firstX != secondX){
             if(firstX < secondX){
@@ -101,11 +116,8 @@ public class CaveGenerator implements DungeonGenerator {
                 firstX--;
             }
 
-            dungeonList.add(new Position(firstX, first.getY()));
+            dungeonList.add(new Position(firstX, firstY));
         }
-
-        int firstY = first.getY();
-        int secondY = second.getY();
 
         while(firstY != secondY){
             if(firstY < secondY){
@@ -123,7 +135,7 @@ public class CaveGenerator implements DungeonGenerator {
         int curPos = -1;
         int curDis = Integer.MAX_VALUE;
 
-        Position current = null;
+        Position current;
         int nextDis;
         for(int i = 0; i < seeds.size(); i++){
             current = seeds.get(i);
